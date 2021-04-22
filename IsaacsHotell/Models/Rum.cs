@@ -13,7 +13,7 @@ namespace IsaacsHotell.Models
         public int Antalsovplatser { get; set; }
         public bool Smutsigt { get; set; }
         [ForeignKey("FK_Bokning")]
-        public int BokningId { get; set; }
+        public int? BokningId { get; set; }
         public List<Bokning> Bokningar { get; set; }
     }
 }

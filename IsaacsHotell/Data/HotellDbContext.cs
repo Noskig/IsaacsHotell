@@ -21,13 +21,13 @@ namespace IsaacsHotell.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            foreach (var e in modelBuilder.Model.GetEntityTypes())
-            {
-                foreach (var fk in e.GetForeignKeys())
-                {
-                    fk.DeleteBehavior = DeleteBehavior.Restrict;
-                }
-            }
+            //foreach (var e in modelBuilder.Model.GetEntityTypes())
+            //{
+            //    foreach (var fk in e.GetForeignKeys())
+            //    {
+            //        fk.DeleteBehavior = DeleteBehavior.Restrict;
+            //    }
+            //}
 
             modelBuilder.Entity<Gäst>()
                  .HasOne(a => a.Order)
