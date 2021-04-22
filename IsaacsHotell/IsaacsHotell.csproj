@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>aspnet-IsaacsHotell-983C556F-287D-47BD-B8C2-FC9143A47EFC</UserSecretsId>
-	  <Nullable>enable</Nullable>
+
   </PropertyGroup>
 
   <ItemGroup>

@@ -10,23 +10,22 @@ using IsaacsHotell.Models;
 
 namespace IsaacsHotell.Controllers
 {
-    public class BokningsController : Controller
+    public class AnställdController : Controller
     {
         private readonly HotellDbContext _context;
 
-        public BokningsController(HotellDbContext context)
+        public AnställdController(HotellDbContext context)
         {
             _context = context;
         }
 
-        // GET: Boknings
+        // GET: Anställd
         public async Task<IActionResult> Index()
         {
-            var hotellDbContext = _context.Bokningar.Include(b => b.Gäst).Include(b => b.Rum);
-            return View(await hotellDbContext.ToListAsync());
+            return View(await _context.Anställda.ToListAsync());
         }
 
-        // GET: Boknings/Details/5
+        // GET: Anställd/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,46 +33,39 @@ namespace IsaacsHotell.Controllers
                 return NotFound();
             }
 
-            var bokning = await _context.Bokningar
-                .Include(b => b.Gäst)
-                .Include(b => b.Rum)
+            var anställd = await _context.Anställda
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bokning == null)
+            if (anställd == null)
             {
                 return NotFound();
             }
 
-            return View(bokning);
+            return View(anställd);
         }
 
-        // GET: Boknings/Create
+        // GET: Anställd/Create
         public IActionResult Create()
         {
-            ViewData["GästId"] = new SelectList(_context.Gäster, "Id", "");
-            ViewData["RumId"] = new SelectList(_context.Rum, "Id", "Id");
             return View();
         }
 
-        // POST: Boknings/Create
+        // POST: Anställd/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Incheckning,Utcheckning,GästId,RumId")] Bokning bokning)
+        public async Task<IActionResult> Create([Bind("Id,Förnamn,Efternamn,Roll")] Anställd anställd)
         {
-            if (ModelState.IsValid) //kommer inte in här när jag försöker skapa. Nått med relationen i db som är fuckad
+            if (ModelState.IsValid)
             {
-                _context.Add(bokning);
-                 //här kanske det måste uppdateras i Gästen också
+                _context.Add(anställd);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GästId"] = new SelectList(_context.Gäster, "Id", "Id", bokning.GästId);
-            ViewData["RumId"] = new SelectList(_context.Rum, "Id", "Id", bokning.RumId);
-            return View(bokning);
+            return View(anställd);
         }
 
-        // GET: Boknings/Edit/5
+        // GET: Anställd/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,24 +73,22 @@ namespace IsaacsHotell.Controllers
                 return NotFound();
             }
 
-            var bokning = await _context.Bokningar.FindAsync(id);
-            if (bokning == null)
+            var anställd = await _context.Anställda.FindAsync(id);
+            if (anställd == null)
             {
                 return NotFound();
             }
-            ViewData["GästId"] = new SelectList(_context.Gäster, "Id", "Id", bokning.GästId);
-            ViewData["RumId"] = new SelectList(_context.Rum, "Id", "Id", bokning.RumId);
-            return View(bokning);
+            return View(anställd);
         }
 
-        // POST: Boknings/Edit/5
+        // POST: Anställd/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Incheckning,Utcheckning,GästId,RumId")] Bokning bokning)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Förnamn,Efternamn,Roll")] Anställd anställd)
         {
-            if (id != bokning.Id)
+            if (id != anställd.Id)
             {
                 return NotFound();
             }
@@ -107,12 +97,12 @@ namespace IsaacsHotell.Controllers
             {
                 try
                 {
-                    _context.Update(bokning);
+                    _context.Update(anställd);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BokningExists(bokning.Id))
+                    if (!AnställdExists(anställd.Id))
                     {
                         return NotFound();
                     }
@@ -123,12 +113,10 @@ namespace IsaacsHotell.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GästId"] = new SelectList(_context.Gäster, "Id", "Id", bokning.GästId);
-            ViewData["RumId"] = new SelectList(_context.Rum, "Id", "Id", bokning.RumId);
-            return View(bokning);
+            return View(anställd);
         }
 
-        // GET: Boknings/Delete/5
+        // GET: Anställd/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -136,32 +124,30 @@ namespace IsaacsHotell.Controllers
                 return NotFound();
             }
 
-            var bokning = await _context.Bokningar
-                .Include(b => b.Gäst)
-                .Include(b => b.Rum)
+            var anställd = await _context.Anställda
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bokning == null)
+            if (anställd == null)
             {
                 return NotFound();
             }
 
-            return View(bokning);
+            return View(anställd);
         }
 
-        // POST: Boknings/Delete/5
+        // POST: Anställd/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var bokning = await _context.Bokningar.FindAsync(id);
-            _context.Bokningar.Remove(bokning);
+            var anställd = await _context.Anställda.FindAsync(id);
+            _context.Anställda.Remove(anställd);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BokningExists(int id)
+        private bool AnställdExists(int id)
         {
-            return _context.Bokningar.Any(e => e.Id == id);
+            return _context.Anställda.Any(e => e.Id == id);
         }
     }
 }

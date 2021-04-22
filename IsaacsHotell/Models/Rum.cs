@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,7 +12,8 @@ namespace IsaacsHotell.Models
         public string Namn { get; set; }
         public int Antalsovplatser { get; set; }
         public bool Smutsigt { get; set; }
-        public int? BokningId { get; set; }
+        [ForeignKey("FK_Bokning")]
+        public int BokningId { get; set; }
         public List<Bokning> Bokningar { get; set; }
     }
 }
